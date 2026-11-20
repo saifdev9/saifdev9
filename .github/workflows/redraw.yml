@@ -1,0 +1,40 @@
+# Redraws the profile panels so the contribution and language charts stay current.
+name: Redraw profile
+
+on:
+  schedule:
+    - cron: '30 0 * * *' # daily, 06:00 in Kolkata
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['tools/**']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: redraw
+  cancel-in-progress: true
+
+jobs:
+  redraw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm ci
+        working-directory: tools
+      - run: npm run build
+        working-directory: tools
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit if anything changed
+        run: |
+          git add -A assets README.md
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore: redraw profile panels'
+          git push
