@@ -3,6 +3,7 @@
 // .github/workflows/redraw.yml runs it daily. Type is converted to outlines, so the SVGs need
 // no fonts when GitHub shows them as images. Content lives in DATA; layout rules in ../DESIGN.md.
 import opentype from 'opentype.js';
+import * as simpleIcons from 'simple-icons';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -14,10 +15,11 @@ const F = {
   display: load('GeistMono-700'), mono: load('GeistMono-400'),
   sans: load('Geist-400'), sansMed: load('Geist-500'), sansBold: load('Geist-600'),
 };
-// ground is GitHub's own dark canvas, so in dark mode the panels read as drawn on the page
-const C = { ground: '#0D1117', ink: '#F3F0E7', muted: '#A29E93', line: '#262B33', accent: '#FFC72C' };
-// one-hue sequential ramp for the contribution heatmap, empty day to busiest (OKLCH L .24 to .86)
-const HEAT = ['#1B2025', '#6B5110', '#9C7714', '#D19F17', C.accent];
+// White on matte black, with blue only as the accent: fills for the exit chips, the inverted &&
+// cells, the footer's 0 cell and the pipeline track. Ground glyphs on the accent read at 5.8:1.
+const C = { ground: '#121212', ink: '#F2F2F2', muted: '#9C9C9C', line: '#2C2C2C', accent: '#4E8FF0' };
+// one-hue blue ramp for the contribution chart, empty day to busiest (2.2:1 to 11.3:1 on the ground)
+const HEAT = ['#222222', '#1F4A8A', '#3570C8', '#5A98F2', '#A6CBFF'];
 
 // ---------- DATA ----------
 const LOGIN = 'saifdev9';
@@ -33,6 +35,19 @@ const stages = [
     note: 'AWS and Oracle Cloud run the servers.' },
 ];
 // `to` is where the repo lands when it ships; `proof` is a checked fact about it.
+// Skills by job: [simple-icons slug, name, monogram, monogram color]. A null slug means simple-icons has no logo
+// for that brand (removed at the brand's request or never added), so it gets a monogram tile.
+const skills = [
+  ['Frontend', [['react', 'React'], ['nextdotjs', 'Next.js'], ['typescript', 'TypeScript'], ['javascript', 'JavaScript'],
+    ['html5', 'HTML'], ['css', 'CSS'], ['tailwindcss', 'Tailwind CSS'], ['shadcnui', 'shadcn/ui']]],
+  ['State, forms, grids', [['reactquery', 'TanStack Query'], ['redux', 'Redux Toolkit'], [null, 'Zustand', 'Zu'],
+    ['reacthookform', 'React Hook Form'], ['zod', 'Zod'], [null, 'AG Grid', 'AG']]],
+  ['Backend and data', [['nodedotjs', 'Node.js'], ['express', 'Express'], ['prisma', 'Prisma'], [null, 'SQL', 'SQL'],
+    ['postgresql', 'PostgreSQL'], ['supabase', 'Supabase'], [null, 'QuestDB', 'Q']]],
+  ['DevOps and cloud', [['docker', 'Docker'], ['docker', 'Docker Compose'], ['nginx', 'Nginx'], ['githubactions', 'GitHub Actions'],
+    [null, 'AWS', 'aws', '#FF9900'], [null, 'Oracle Cloud', 'O', '#F80000'], ['vercel', 'Vercel'], ['linux', 'Linux'], ['gnubash', 'Bash'], [null, 'PowerShell', '>_', '#5391FE']]],
+  ['Also', [['rust', 'Rust'], ['git', 'Git'], ['kubernetes', 'Kubernetes (exploring)']]],
+];
 const repos = [
   { slug: 'gitcloner', kind: 'Rust terminal UI', year: '2026', to: 'Releases', lead: true,
     what: 'Clones a pile of git repos at once: public, private, or picked from a GitHub org.',
@@ -205,7 +220,9 @@ function chainGrid(out, x, t, c, words, timing, chipS, chip0, caption) {
   const y1 = t + 0.1 * D + cap, y2 = y1 + R, cx = x + 9.5 * c;
   out.push(typed(words[0], x, y1, D, F.display, C.ink, timing[0]));
   out.push(chip(cx, y1 - cap, chipS, chip0, { attrs: ` class="s" style="animation-delay:${timing[1]}s"`, caption }));
-  out.push(typed('&&', x, y2, D, F.display, C.accent, timing[2], 0.04, 's'));
+  // the && cells invert: solid accent cells, glyphs in the ground color
+  out.push(`<rect class="s" style="animation-delay:${timing[2]}s" x="${x}" y="${t + R}" width="${2 * c}" height="${R}" fill="${C.accent}"/>`);
+  out.push(typed('&&', x, y2, D, F.display, C.ground, timing[2], 0.04, 's'));
   out.push(typed(words[1], x + 3 * c, y2, D, F.display, C.ink, timing[3]));
   out.push(chip(cx, y2 - cap, chipS, chip0, { attrs: ` class="s" style="animation-delay:${timing[4]}s"`, caption }));
   return bot;
@@ -363,6 +380,54 @@ function langPanel(v, L) {
   return svg(g.W, y0 + (perCol - 1) * pitch + (wide ? 30 : 34), langLabel(L), out.join('\n'));
 }
 
+// ---------- skills: logo chips grouped by job ----------
+const ICON = Object.fromEntries(Object.values(simpleIcons).map((i) => [i.slug, i]));
+const skillLabel = 'Skills and tools. ' + skills.map(([group, list]) => `${group}: ${list.map((s) => s[1]).join(', ')}.`).join(' ');
+// Brand color when it reads on the ground (3:1 or better), otherwise ink: black brands such as
+// Next.js, Express, Vercel and Rust would disappear on a dark ground.
+const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+const lum = (hex) => [1, 3, 5].map((i) => lin(parseInt(hex.slice(i, i + 2), 16) / 255)).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+const contrast = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+// Colored brands too dark for the ground are lightened toward white until they reach 3:1;
+// near-neutral ones (black, slate) just use ink.
+function brand(hex) {
+  if (!hex) return C.ink;
+  const rgb = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  if (Math.max(...rgb) - Math.min(...rgb) < 40) return contrast(hex, C.ground) >= 3 ? hex : C.ink;
+  for (let t = 0; t <= 1; t += 0.05) {
+    const mixed = '#' + rgb.map((v) => Math.round(v + (255 - v) * t).toString(16).padStart(2, '0')).join('');
+    if (contrast(mixed, C.ground) >= 3) return mixed;
+  }
+  return C.ink;
+}
+function icon(slug, mono, x, y, s, color) { // (x, y) is the top-left of an s by s box
+  const i = slug && ICON[slug];
+  if (i) return `<path fill="${brand('#' + i.hex)}" transform="translate(${x} ${y.toFixed(1)}) scale(${(s / 24).toFixed(4)})" d="${i.path}"/>`;
+  const size = Math.min(s * 0.55, (s - 5) / (mono.length * MONO_ADV)), fill = brand(color);
+  return `<rect x="${x + 0.6}" y="${(y + 0.6).toFixed(1)}" width="${s - 1.2}" height="${s - 1.2}" fill="none" stroke="${fill}" stroke-width="1.2"/>` +
+    text(mono, x + (s - measure(mono, F.display, size)) / 2, y + s / 2 + (CAP * size) / 2, size, F.display, fill);
+}
+function skillPanel(v) {
+  const g = grid(v), wide = v === V.desktop, out = [top(g)];
+  out.push(title(g, 'Skills and tools', wide));
+  const h = wide ? 32 : 30, is = wide ? 18 : 16, size = wide ? 14 : 13, pad = 10, gap = 8, x0 = wide ? g.M + 170 : g.M;
+  let y = wide ? 82 : 66;
+  for (const [group, list] of skills) {
+    if (wide) out.push(text(group, g.M, y + h / 2 + 5, 14, F.sans, C.muted));
+    else { out.push(text(group, g.M, y + 6, 13, F.sans, C.muted)); y += 16; }
+    let x = x0;
+    for (const [slug, name, mono, color] of list) {
+      const w = pad + is + 8 + measure(name, F.sans, size) + pad;
+      if (x + w > g.end) { x = x0; y += h + gap; } // wrap to the next row
+      out.push(`<rect x="${x + 0.5}" y="${y + 0.5}" width="${(w - 1).toFixed(1)}" height="${h - 1}" fill="none" stroke="${C.line}"/>`);
+      out.push(icon(slug, mono, x + pad, y + (h - is) / 2, is, color), text(name, x + pad + is + 8, y + h / 2 + size * 0.36, size, F.sans, C.ink));
+      x += w + gap;
+    }
+    y += h + (wide ? 16 : 20);
+  }
+  return svg(g.W, y + 14, skillLabel, out.join('\n'));
+}
+
 // ---------- pipeline: write && release && ship ----------
 const pipeLabel = 'How a change leaves my machine: ' + stages.map((st) => `${st.name}: ${st.tools.join(', ')}. ${st.note}`).join(' && ') + ' Exit 0.';
 // The track fills once, resting at each stage, and reaches the exit chip, which answers 0. Its
@@ -489,6 +554,7 @@ const panels = [
   { name: 'contributions', label: contribLabel(days, st), href: `https://github.com/${LOGIN}`, draw: (v) => contribPanel(v, days, st) },
   { name: 'pipeline', label: pipeLabel, href: `https://github.com/${LOGIN}/gitcloner/actions`, draw: pipeline },
   { name: 'languages', label: langLabel(langs), href: repoHref, draw: (v) => langPanel(v, langs) },
+  { name: 'skills', label: skillLabel, href: repoHref, draw: skillPanel },
   { name: 'work', label: workLabel, href: repoHref, draw: workHead },
   ...repos.map((r) => ({ name: `repo-${r.slug}`, label: repoLabel(r), href: `https://github.com/${LOGIN}/${r.slug}`, draw: (v) => repoRow(r, v) })),
   { name: 'footer', label: footLabel, href: `mailto:${email}`, draw: footer },

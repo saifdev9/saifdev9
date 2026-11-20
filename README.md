@@ -30,6 +30,13 @@
 </a>
 <a href="https://github.com/saifdev9?tab=repositories">
 <picture>
+<source media="(max-width: 600px), (min-width: 768px) and (max-width: 900px)" srcset="assets/skills-phone.svg">
+<source media="(max-width: 1199px)" srcset="assets/skills-mid.svg">
+<img src="assets/skills.svg" width="100%" align="top" alt="Skills and tools. Frontend: React, Next.js, TypeScript, JavaScript, HTML, CSS, Tailwind CSS, shadcn/ui. State, forms, grids: TanStack Query, Redux Toolkit, Zustand, React Hook Form, Zod, AG Grid. Backend and data: Node.js, Express, Prisma, SQL, PostgreSQL, Supabase, QuestDB. DevOps and cloud: Docker, Docker Compose, Nginx, GitHub Actions, AWS, Oracle Cloud, Vercel, Linux, Bash, PowerShell. Also: Rust, Git, Kubernetes (exploring).">
+</picture>
+</a>
+<a href="https://github.com/saifdev9?tab=repositories">
+<picture>
 <source media="(max-width: 600px), (min-width: 768px) and (max-width: 900px)" srcset="assets/work-phone.svg">
 <source media="(max-width: 1199px)" srcset="assets/work-mid.svg">
 <img src="assets/work.svg" width="100%" align="top" alt="Repos that exited 0. Columns: repo, what it does, exit status.">

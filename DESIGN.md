@@ -37,13 +37,15 @@ Screenshot:  the 9x2 block "front-end / && devops" with the yellow ampersands an
 
 ## System
 
-- Palette (single committed theme; it reads on GitHub light, dark and dimmed):
-  - `ground` #0D1117, GitHub's own dark canvas (was a warm tar #0B0B0A; changed so dark mode shows no seam)
-  - `ink` #F3F0E7
-  - `muted` #A29E93 (7.6:1 on ground)
-  - `line` #262B33 hairlines and cells
-  - `accent` #FFC72C Kolkata taxi yellow; only for `&&`, exit codes and the running job
-  - `on-accent` #0B0B0A
+- Palette (owner: blue as the theme color, "not the background"): white on matte black, blue accent.
+  - `ground` #121212 matte black
+  - `ink` #F2F2F2 white (16.7:1)
+  - `muted` #9C9C9C (6.8:1)
+  - `line` #2C2C2C hairlines, cells and chip borders
+  - `accent` #4E8FF0 blue: fills only (exit chips, the inverted `&&` cells, the footer's 0 cell, the pipeline track); black glyphs on it read at 5.8:1
+  - contribution ramp #222222 #1F4A8A #3570C8 #5A98F2 #A6CBFF (faintest bar 2.2:1 on the ground)
+- Skills panel: chips with simple-icons logos (CC0) drawn in ink; brands simple-icons does not carry
+  (Zustand, AG Grid, QuestDB, AWS, Oracle, PowerShell) get a monogram tile instead.
 - Type: Geist (reading: titles 600, labels and prose 400/500) and Geist Mono (code only: the
   chain, prompts, stage names, repo names, URLs; 700 display, 400 text). Both Google, OFL.
   Chosen at the owner's request for a more professional face; it replaced an all-Martian-Mono
