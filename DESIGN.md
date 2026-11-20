@@ -49,13 +49,16 @@ Screenshot:  the 9x2 block "front-end / && devops" with the yellow ampersands an
   Chosen at the owner's request for a more professional face; it replaced an all-Martian-Mono
   system. All type is converted to outlines at build time, so nothing depends on fonts
   loading inside an `<img>`.
-- Charts (dataviz method): the contribution heatmap is a one-hue sequential ramp
-  #1B2025 #6B5110 #9C7714 #D19F17 #FFC72C (OKLCH L .24 to .86, faintest level 2.5:1 on
-  ground) with a less/more key and stat tiles above it (label, value, note); phones show the
-  last 26 weeks. Languages are ranked horizontal bars in one hue (ink, "Other" muted), value
-  at the tip, square at the baseline, 4-unit rounded data end. No hover exists in an image,
-  so each panel's alt text is its table view. Data comes from the public contribution page
-  (exactly what visitors see) and the public repos API at build time;
+- Charts (dataviz method): contributions are an isometric year (after the owner's reference
+  screenshots): one bar per day, height and color both from GitHub's own level buckets on the
+  one-hue ramp #1B2025 #6B5110 #9C7714 #D19F17 #FFC72C (faintest level 2.5:1 on ground), lit
+  from the top left; the figures sit in the strip's two empty corners on desktop and in a row
+  above it on compact art (phones show the last 26 weeks). The bars rise once, week by week,
+  in under 1.5 s. A radar of contribution types was considered and left out: 2,642 of 2,692
+  contributions are private and GitHub does not break those down, so it would show 35 commits.
+  Languages are ranked bars in two columns, one hue (ink, "Other" muted), value at the tip.
+  No hover exists in an image, so each panel's alt text is its table view. Data comes from the
+  public contribution page (exactly what visitors see) and the public repos API at build time;
   .github/workflows/redraw.yml rebuilds daily.
 - Grid: 10 columns across a 904-unit measure (margin 48 of 1000). Columns 1 to 9 hold content,
   column 10 is the status gutter where exit codes live. The hero display size is set so one
@@ -133,6 +136,10 @@ codes, `&&`, logout), not as a costume.
 - No real headings inside panels: their text is in the `alt` attributes, which GitHub keeps.
 - Light/dark variants were dropped on purpose: GitHub rewrites `prefers-color-scheme` sources,
   which would break the phone-width sources.
+
+Compaction (owner: "too big"): total height cut from 2,869 to about 1,780 units on desktop by
+setting the chain beside the bio, one-line figures, comma-run tool lists, two-column
+languages and tighter rows.
 
 Pass 3 critic (7.15) changes: ground switched to GitHub's own dark #0D1117 so dark mode has no
 seam; the pipeline's progress is now a track that fills and stays filled (rest frame: every
