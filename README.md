@@ -11,7 +11,7 @@
 <picture>
 <source media="(max-width: 600px), (min-width: 768px) and (max-width: 900px)" srcset="assets/contributions-phone.svg">
 <source media="(max-width: 1199px)" srcset="assets/contributions-mid.svg">
-<img src="assets/contributions.svg" width="100%" align="top" alt="Contributions in the last year, from 16 Nov 2025 to 20 Nov 2026: 2,703 contributions on 256 of 370 days. Longest streak 13 days, 19 Jul 2026 to 31 Jul 2026. Current streak 5 days. Busiest day 25 Aug 2026 with 218 contributions.">
+<img src="assets/contributions.svg" width="100%" align="top" alt="Contributions in the last year, from 16 Nov 2025 to 21 Nov 2026: 2,704 contributions on 256 of 371 days. Longest streak 13 days, 19 Jul 2026 to 31 Jul 2026. Current streak 5 days. Busiest day 25 Aug 2026 with 218 contributions.">
 </picture>
 </a>
 <a href="https://github.com/saifdev9/gitcloner/actions">
@@ -25,7 +25,7 @@
 <picture>
 <source media="(max-width: 600px), (min-width: 768px) and (max-width: 900px)" srcset="assets/languages-phone.svg">
 <source media="(max-width: 1199px)" srcset="assets/languages-mid.svg">
-<img src="assets/languages.svg" width="100%" align="top" alt="Languages across 17 public repos, by share of bytes, forks excluded: JavaScript 44.8%, HTML 24.2%, Rust 12.3%, TypeScript 11.5%, PowerShell 4.1%, CSS 2.0%, Other 1.0%.">
+<img src="assets/languages.svg" width="100%" align="top" alt="Languages across 17 public repos, by share of bytes, forks excluded: JavaScript 45.0%, HTML 24.1%, Rust 12.3%, TypeScript 11.5%, PowerShell 4.1%, CSS 2.0%, Other 1.0%.">
 </picture>
 </a>
 <a href="https://github.com/saifdev9?tab=repositories">
