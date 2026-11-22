@@ -11,7 +11,7 @@
 <picture>
 <source media="(max-width: 600px), (min-width: 768px) and (max-width: 900px)" srcset="assets/contributions-phone.svg">
 <source media="(max-width: 1199px)" srcset="assets/contributions-mid.svg">
-<img src="assets/contributions.svg" width="100%" align="top" alt="Contributions in the last year, from 16 Nov 2025 to 21 Nov 2026: 2,704 contributions on 256 of 371 days. Longest streak 13 days, 19 Jul 2026 to 31 Jul 2026. Current streak 5 days. Busiest day 25 Aug 2026 with 218 contributions.">
+<img src="assets/contributions.svg" width="100%" align="top" alt="Contributions in the last year, from 23 Nov 2025 to 22 Nov 2026: 2,666 contributions on 252 of 365 days. Longest streak 13 days, 19 Jul 2026 to 31 Jul 2026. Current streak 0 days. Busiest day 25 Aug 2026 with 218 contributions.">
 </picture>
 </a>
 <a href="https://github.com/saifdev9/gitcloner/actions">
